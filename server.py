@@ -3,7 +3,7 @@ import datetime
 import _thread
 import logging
 
-logging.basicConfig(filename='example.log',level=logging.INFO)
+logging.basicConfig(filename='log.log',level=logging.INFO)
 
 class MyServer():
 	def __init__(self):

@@ -11,7 +11,7 @@ class MyServer():
 		self.udpSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 	def tcpConn (self):
-		host = socket.gethostname()
+		host = "127.0.0.1"
 		port = 12345                
 		self.tcpSocket.bind((host, port))
 		
@@ -28,7 +28,7 @@ class MyServer():
 			client.close()
 
 	def udpConn	(self):
-		host = socket.gethostname()
+		host = "127.0.0.1"
 		port = 12345                
 		self.udpSocket.bind((host, port))
 		print("Waiting for UDP...")

@@ -46,7 +46,7 @@ class InputData:
 	def tryConnect(self):
 		for item in self.valueArray:
 			num= item[0]
-			host = socket.gethostname()
+			host = item[1]
 			port = item[2]
 			protocol = item[3]
 			time = item[4]

@@ -1,43 +1,64 @@
 import socket  
 import sys
+import csv
+import time
 
 class SockClient:
-	
-	def __init__(self, socketType, port, msg ): #konsturktor
+
+	def __init__(self, socketType, host, port, msg, delay): #konsturktor
 		self.socketType = socketType
+		self.host = host
 		self.port = port
 		self.msg = msg
-		host = socket.gethostname()
-		if socketType == "tcp":
-			self.clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-			self.clientSocket.connect((host, port))
-			self.clientSocket.send(msg.encode())
+		self.delay = float(delay) / 1000
+		
+		self.dataSend()
+		self.dataRecieve()
+		self.close()
 
-		elif socketType == "udp":
+	def dataSend(self):
+		time.sleep(self.delay)
+
+		if self.socketType.lower() == "tcp":
+			self.clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			self.clientSocket.connect((self.host, int(self.port)))
+			self.clientSocket.send(self.msg.encode())
+			
+		elif self.socketType.lower() == "udp":
 			self.clientSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-			self.clientSocket.sendto(msg.encode(),(host, port))
-	
+			self.clientSocket.sendto(self.msg.encode(),(self.host, int(self.port)))
+			
 	def dataRecieve(self):
-		return self.clientSocket.recv(1024).decode()
+		print (self.clientSocket.recv(1024).decode())
 	
 	def close(self):
 		self.clientSocket.close
 
-def inputVariables():
-	socketType = input ("Type TCP or UDP to choose connection type: ").lower()
-	if not(socketType == "tcp" or socketType == "udp") :
-		sys.exit("Wrong input! Enter TCP or UDP")
+class InputData: 
+	def __init__(self):
+		self.importFile =  open("testValues.csv", "r")
+		self.importValues = csv.reader(self.importFile)
+		self.valueArray = []
 
-	port = int(input ("Port number (between 1 and 65535): "))
-	if not ((port > 0) and (port < 65534)):
-		sys.exit("Wrong input! Enter a number between 1 and 65535")
+		for row in self.importValues:
+			self.valueArray.append(row)
 
-	msg = input("Input message: ")
+	def tryConnect(self):
+		for item in self.valueArray:
+			num= item[0]
+			host = socket.gethostname()
+			port = item[2]
+			protocol = item[3]
+			time = item[4]
+			msg = item[5]
 
-	return socketType, port, msg
+			if not(num == '#'):
+				socketSend = SockClient(protocol, host, port, msg, time)
 
-socketInfo = inputVariables()
+	def fileClose(self):
+		self.importFile.close()
 
-socketA = SockClient(socketInfo[0],socketInfo[1],socketInfo[2])
-print(socketA.dataRecieve())
-socketA.close()
+
+file1 = InputData()
+file1.tryConnect()
+file1.fileClose()

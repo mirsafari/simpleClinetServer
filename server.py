@@ -3,7 +3,7 @@ import datetime
 import _thread
 import logging
 
-logging.basicConfig(filename='log.log',level=logging.INFO)
+logging.basicConfig(filename='example.log',level=logging.INFO)
 
 class MyServer():
 	def __init__(self):
@@ -31,14 +31,13 @@ class MyServer():
 		host = socket.gethostname()
 		port = 12345                
 		self.udpSocket.bind((host, port))
-
 		print("Waiting for UDP...")
-
-		msg, address = self.udpSocket.recvfrom(1024)
-		print ("Got new UDP message from: ", address)
-	
-		self.udpSocket.sendto("Thank your for sending!".encode(), address)
-		self.logging("UDP", msg.decode(), address)
+		while True:
+			msg, address = self.udpSocket.recvfrom(1024)
+			
+			print ("Got new UDP message from: ", address)
+			self.udpSocket.sendto("Thank your for sending!".encode(), address)
+			self.logging("UDP", msg.decode(), address)
 
 	def logging (self, connType, data, address):
 		self.connType = connType

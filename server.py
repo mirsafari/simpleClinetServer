@@ -11,7 +11,7 @@ class MyServer():
 		self.udpSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 	def tcpConn (self):
-		host = "127.0.0.1"
+		host = "127.0.0.2"
 		port = 12345                
 		self.tcpSocket.bind((host, port))
 		
